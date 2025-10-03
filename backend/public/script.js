@@ -23,7 +23,7 @@ document.getElementById("bmiForm").addEventListener("submit", async (e) => {
       <p><b>BMI:</b> ${data.bmi} → <b>${data.category}</b></p>
     `;
 
-    loadHistory(); // refresh history after new entry
+    // loadHistory(); // refresh history after new entry
   } catch (err) {
     console.error("Error saving BMI:", err);
     alert("Failed to save BMI. Please try again.");
