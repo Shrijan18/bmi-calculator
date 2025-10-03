@@ -1,5 +1,4 @@
-const API_URL = "http://localhost:5000";
-
+// Handle BMI form submit
 document.getElementById("bmiForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -9,72 +8,72 @@ document.getElementById("bmiForm").addEventListener("submit", async (e) => {
   const height = document.getElementById("height").value;
   const weight = document.getElementById("weight").value;
 
-  const res = await fetch(`${API_URL}/bmi`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, age, gender, height, weight }),
-  });
+  try {
+    const res = await fetch("/bmi", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, age, gender, height, weight }),
+    });
 
-  const data = await res.json();
-  document.getElementById("result").innerHTML =
-    `Your BMI: <strong>${data.bmi}</strong> (${data.category})`;
+    const data = await res.json();
 
-  // ✅ Refresh history after adding a record
-  fetchHistory();
+    document.getElementById("result").innerHTML = `
+      <p><b>${data.name}</b> (${data.age}, ${data.gender})</p>
+      <p>Height: ${data.height_cm} cm | Weight: ${data.weight_kg} kg</p>
+      <p><b>BMI:</b> ${data.bmi} → <b>${data.category}</b></p>
+    `;
+
+    loadHistory(); // refresh history after new entry
+  } catch (err) {
+    console.error("Error saving BMI:", err);
+    alert("Failed to save BMI. Please try again.");
+  }
 });
 
-async function fetchHistory(searchName = "") {
-  let url = `${API_URL}/history`;
-  if (searchName) {
-    url += `?name=${encodeURIComponent(searchName)}`;
-  }
+// Handle search button
+document.getElementById("searchBtn").addEventListener("click", () => {
+  const name = document.getElementById("searchName").value.trim();
+  loadHistory(name);
+});
 
+// Load history (all or by search name)
+async function loadHistory(name = "") {
   try {
+    let url = "/history";
+    if (name) url += `?name=${encodeURIComponent(name)}`;
+
     const res = await fetch(url);
-    const records = await res.json();
+    const history = await res.json();
 
     const tbody = document.querySelector("#historyTable tbody");
     tbody.innerHTML = "";
 
-    records.forEach(r => {
-      const date = new Date(r.created_at);
-
-      // ✅ Format like: 3 October 2025, 8:59 PM
-      const formattedDate = date.toLocaleDateString("en-GB", {
+    history.forEach((row) => {
+      const date = new Date(row.created_at).toLocaleDateString("en-GB", {
         day: "numeric",
         month: "long",
-        year: "numeric"
-      });
-      const formattedTime = date.toLocaleTimeString("en-GB", {
+        year: "numeric",
         hour: "2-digit",
         minute: "2-digit",
-        hour12: true
       });
 
-      const row = `<tr>
-        <td>${formattedDate}, ${formattedTime}</td>
-        <td>${r.name}</td>
-        <td>${r.age}</td>
-        <td>${r.gender}</td>
-        <td>${r.height_cm}</td>
-        <td>${r.weight_kg}</td>
-        <td>${r.bmi}</td>
-        <td>${r.category}</td>
-      </tr>`;
-      tbody.innerHTML += row;
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${date}</td>
+        <td>${row.name}</td>
+        <td>${row.age}</td>
+        <td>${row.gender}</td>
+        <td>${row.height_cm}</td>
+        <td>${row.weight_kg}</td>
+        <td>${row.bmi}</td>
+        <td>${row.category}</td>
+      `;
+      tbody.appendChild(tr);
     });
   } catch (err) {
-    console.error("Error loading history:", err);
+    console.error("Error fetching history:", err);
   }
 }
 
-// ✅ Load history automatically on page load
-window.onload = () => {
-  fetchHistory();
-
-  // search button event
-  document.getElementById("searchBtn").addEventListener("click", () => {
-    const searchName = document.getElementById("searchName").value;
-    fetchHistory(searchName);
-  });
-};
+// Load history on page load
+loadHistory();
