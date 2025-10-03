@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>BMI Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="bmi.png">
+
+</head>
+
+<body>
+    <header>
+        <h1>BMI Calculator</h1>
+        <p>Track your health journey with precise BMI calculations</p>
+    </header>
+
+    <main>
+        <section class="card">
+            <h2>BMI Calculator</h2>
+            <form id="bmiForm">
+                <input type="text" id="name" placeholder="Name" required>
+                <input type="number" id="age" placeholder="Age" required>
+                <select id="gender" required>
+                    <option value="">Gender</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                </select>
+                <input type="number" id="height" placeholder="Height (cm)" required>
+                <input type="number" id="weight" placeholder="Weight (kg)" required>
+                <button type="submit">Calculate BMI</button>
+                <button type="reset">Reset</button>
+            </form>
+
+            <div id="result" class="result"></div>
+        </section>
+
+        
+        <section class="card">
+            <h2>BMI Reference Chart</h2>
+            <table id="referenceTable">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>BMI Range</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Underweight</td>
+                        <td>Less than 18.5</td>
+                    </tr>
+                    <tr>
+                        <td>Normal</td>
+                        <td>18.5 – 24.9</td>
+                    </tr>
+                    <tr>
+                        <td>Overweight</td>
+                        <td>25 – 29.9</td>
+                    </tr>
+                    <tr>
+                        <td>Obese</td>
+                        <td>30 and above</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        
+        <section class="card">
+            <h2>BMI History</h2>
+            <input type="text" id="searchName" placeholder="Enter name to search">
+            <button id="searchBtn">Search</button>
+            <table id="historyTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>Height</th>
+                        <th>Weight</th>
+                        <th>BMI</th>
+                        <th>Category</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© 2025 BMI Calculator. Stay healthy.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
