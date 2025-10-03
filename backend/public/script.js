@@ -76,4 +76,4 @@ async function loadHistory(name = "") {
 }
 
 // Load history on page load
-loadHistory();
+// loadHistory();
