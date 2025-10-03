@@ -22,8 +22,6 @@ document.getElementById("bmiForm").addEventListener("submit", async (e) => {
       <p>Height: ${data.height_cm} cm | Weight: ${data.weight_kg} kg</p>
       <p><b>BMI:</b> ${data.bmi} → <b>${data.category}</b></p>
     `;
-
-    // loadHistory(); // refresh history after new entry
   } catch (err) {
     console.error("Error saving BMI:", err);
     alert("Failed to save BMI. Please try again.");
@@ -33,25 +31,22 @@ document.getElementById("bmiForm").addEventListener("submit", async (e) => {
 // Handle search button
 document.getElementById("searchBtn").addEventListener("click", () => {
   const name = document.getElementById("searchName").value.trim();
-  loadHistory(name);
+  if (name) loadHistory(name); // only fetch if a name is entered
 });
 
-// Load history (all or by search name)
+// Load history (only when searched)
 async function loadHistory(name = "") {
   try {
-    let url = "/history";
-    if (name) url += `?name=${encodeURIComponent(name)}`;
-
-    const res = await fetch(url);
+    const res = await fetch(`/history?name=${encodeURIComponent(name)}`);
     const history = await res.json();
 
     const tbody = document.querySelector("#historyTable tbody");
     tbody.innerHTML = "";
 
     history.forEach((row) => {
-      const date = new Date(row.created_at).toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "long",
+      const date = new Date(row.created_at).toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "short",
         year: "numeric",
         hour: "2-digit",
         minute: "2-digit",
@@ -74,6 +69,3 @@ async function loadHistory(name = "") {
     console.error("Error fetching history:", err);
   }
 }
-
-// Load history on page load
-// loadHistory();
